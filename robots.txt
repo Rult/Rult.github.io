@@ -1,0 +1,6 @@
+Host: stilltest.tk
+
+User-agent: *
+Disallow: /resources
+Allow: /resources/logo
+Disallow: /soontm

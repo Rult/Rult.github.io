@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>StillTest</title>
+	<meta name="description" content="Просто очередной тестовый сайтик. Made by Rult.">
+
+	<meta property="og:title" content="Главная">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="StillTest">
+	<meta property="og:image" content="/resources/logo256.png">
+	<meta property="og:url" content="/">
+	<meta property="og:description" content="Здесь был Рульт.">
+
+	<link rel="stylesheet" href="/resources/styleadaptive.css">
+	<link rel="icon" href="/resources/favicon.ico" type="image/x-icon">
+
+	<style>
+
+	#contentLogo {
+		filter: none;
+		-webkit-filter: none;
+	}
+
+	.spanHint {
+		border-bottom: 1px dashed;
+	}
+
+	</style>
+
+</head>
+<body>
+
+<script src="/resources/interfacepack.js"></script>
+
+<div id="content">
+<article>
+
+	<h2>Приветствую!</h2>
+
+	<img src="/resources/logo256.png" id="contentLogo" class="regularImage" alt="Логотип StillTest" style="cursor: pointer;">
+
+	<p>Вы находитесь на очередном тестовом сайтике.</p>
+
+	<div class="contentMainEnd"></div>
+
+</article>
+</div>
+
+<script>
+
+var isContentLogoRotated = true;
+
+contentLogo.onclick = function rotateContentLogo() {
+
+	if (isContentLogoRotated == true) {
+
+		isContentLogoRotated = false;
+
+		contentLogo.style.transition = "transform 2.5s cubic-bezier(0.1,0,0.5,1)";
+		contentLogo.style.transform = "rotate(-1080deg)";
+		contentLogo.style.cursor = "default";
+
+		setTimeout(function() {
+			contentLogo.style.transition = "transform 0s cubic-bezier(0.1,0,0.5,1)";
+			contentLogo.style.transform = "rotate(0deg)";
+			contentLogo.style.cursor = "pointer";
+
+			isContentLogoRotated = true;
+		}, 2501);
+
+	}
+
+}
+
+</script>
+
+<script src="/resources/contentadjuster.js"></script>
+
+
+</body>
+</html>

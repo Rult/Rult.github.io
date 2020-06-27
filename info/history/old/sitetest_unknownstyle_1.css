@@ -1,0 +1,46 @@
+body {
+    font-family:Comic Sans MS,cursive;
+    font-size:11pt;
+    background-color:#f0f0f0;
+    background:url(https://i.imgur.com/wbvMvot.jpg) repeat-y;
+    background-attachment:fixed;
+    background-size:100%;
+    color:#333;
+}
+
+h1 {
+    background-color:#525b5d;
+    color:#a52a2a;
+    font-size:24pt;
+    font-family:Georgia,Times,serif;
+    font-weight:normal;
+}
+
+p.fieldbox {
+    background-color:#eeeeee;
+    text-align:justify;
+    margin-left:60px;
+    margin-right:10px;
+    border-left:1px solid #999;
+    border-bottom:1px solid #999;
+    padding-left:10px;
+    padding-bottom:10px;
+}
+
+div.text {
+    background-color:#eeeeee;
+    font-family:Courier New,monospace;
+    margin-left:10%;
+    margin-right:10%;
+    height:5cm;
+    overflow-y:auto;
+}
+
+video.ready {
+    display:block;
+    margin:0 auto;
+}
+
+p.center {
+    text-align:center;
+}

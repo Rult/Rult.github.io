@@ -1,0 +1,613 @@
+<!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Галерея</title>
+
+	<meta property="og:title" content="Галерея">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="StillTest">
+	<meta property="og:image" content="/resources/logo256.png">
+	<meta property="og:url" content="/gallery/">
+
+	<link rel="stylesheet" href="/resources/styleadaptive.css">
+	<link rel="icon" href="/resources/favicon.ico" type="image/x-icon">
+
+	<style>
+
+		#content {
+			text-align: center;
+		}
+
+		.imageContainer {
+			display: inline-block;
+			max-width: 80vw;
+			max-height: 80vw;
+			margin: 0.5vw;
+
+			background-color: #313945;
+			background-size: 90% 90%;
+			background-repeat: no-repeat;
+			background-position: center;
+
+			cursor: zoom-in;
+		}
+
+		#modalWindowContainer {
+			padding: 7.5vh 0;
+			padding-top: 8vh;
+		}
+
+			#modalWindow {
+				position: absolute;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				width: 100%;
+				height: 84.5vh;
+			}
+
+				#imageHat {
+					background: rgba(45,51,63,0.9);
+					margin: 0 15%;
+					margin-top: -4vh;
+					width: 70%;
+					min-height: 2.4em;
+					border-radius: 0.5em;
+				}
+					#imageDescription {
+						font-size: 1.2em;
+						line-height: 1em;
+						padding: 0.5em;
+						margin: 0;
+						top: 0;
+						width: calc(100% - 3.5em);
+					}
+					#exitButton {
+						position: relative;
+						top: 0.5em;
+						margin-right: 0.5em;
+						float: right;
+						height: 1.4em;
+
+						cursor: pointer;
+
+						opacity: 0.7;
+					}
+
+						#exitButton:hover {
+							opacity: 1;
+						}
+
+
+		.pixelatedImageMode {
+			image-rendering: optimizeSpeed;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: pixelated;
+			image-rendering: optimize-contrast;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+
+		.regularImageMode {
+			image-rendering: auto;
+		}
+
+		.tagButton {
+			border: 0.2em solid;
+			border-radius: 0.3em;
+
+			display: inline-block;
+			margin: 0.1em;
+			padding: 0.2em;
+			opacity: 0.8;
+			cursor: pointer;
+		}
+
+			.tagButton:hover {
+				opacity: 1;
+			}
+
+			.tagButtonIgnored {
+				border-color: #3e3f41;
+				background-color: #1e212a;
+			}
+
+			.tagButtonOn {
+				border-color: #3F8948;
+				background-color: #196e21;
+			}
+
+			.tagButtonOff {
+				border-color: #874044;
+				background-color: #6d1a1c;
+			}
+
+		#filterSpoiler {
+			border: 0.2em solid #353638;
+			background-color: #1c1e26;
+			border-radius: 0.4em;
+
+			display: inline-block;
+			margin-top: 0.5em;
+			padding: 0.4em;
+			opacity: 0.8;
+			cursor: pointer;
+		}
+
+			#filterSpoiler:hover {
+				opacity: 1;
+			}
+
+		#tagChoose {
+			margin-top: 0.7em;
+		}
+
+		#pageChooseTop {
+			padding-top: 0.7em;
+			padding-bottom: 0.5em;
+		}
+
+		#pageChooseBottom {
+			padding-top: 0.5em;
+		}
+
+		.pageButton {
+			display: inline-block;
+			padding: 0.4em 0.6em;
+
+			text-size: 1.5em;
+			margin: 0 0.2em;
+
+			border: 0.2em solid;
+			border-radius: 0.4em;
+			border-color: #444;
+			background-color: #1E2029;
+
+			opacity: 0.7;
+			cursor: pointer;
+		}
+
+			.pageButton:hover {
+				opacity: 1;
+			}
+
+			.pageButtonChosen {
+				opacity: 1;
+				border-color: #414141;
+				background-color: #1a1b23;
+			}
+
+		#sendImageSpoiler {
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		#filterTextResult {
+			margin-bottom: 0.5em;
+			display: none;
+		}
+
+		#tagChoose, #filterSpoiler, #pageChooseTop, #pageChooseBottom {
+		    -ms-user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
+
+			position: relative;
+		}
+
+	</style>
+
+</head>
+<body>
+
+<script src="/resources/interfacepack.js"></script>
+
+<div id="content">
+<h2>Здесь собраны самые разные картинки с Рандома и Околорандомья</h2>
+<p><span id="imageCounter">Идёт загрузка базы картинок...</span></p>
+<!--
+<p id="sendImageSpoiler"><a style="color: #94c6ea">Также вы можете предложить свою картинку.</a></p>
+<form id="sendImageForm" style="display: none;">
+	<p>Название:<br><input id="submit_name" type="text" name="submit_name"></input></p>
+	<p>Ссылка:<br><input id="submit_link" type="text" name="submit_link"></input></p>
+	<p><input id="sendImageFormSubmit" value="Отправить" type="submit"></input></p>
+</form>
+-->
+<p><a href="https://chaoscraft.ml/files/gallery/" target="_blank">Поиск по картинкам + статистика от PLAYER_CHAR.</a></p>
+<p>Powered by Imgur.</p>
+<div id="filterSpoiler" style="font-size: 1.3em;">Фильтр по тегам</div>
+<div id="tagChoose" style="display: none;"></div>
+<div id="pageChooseTop"></div>
+<div id="filterTextResult"></div>
+<div id="imgError" style="display: none">Таких изображений нет D:</div>
+<div id="mainContainer"></div>
+<div id="pageChooseBottom"></div>
+</div>
+
+
+<div id="modalWindowContainer">
+<div id="modalWindow">
+<div id="imageHat">
+<img id="exitButton" src="/resources/exit_button.svg">
+<div id="imageDescription">
+</div>
+</div>
+</div>
+</div>
+
+
+
+<script>
+
+var spanImageCounter = document.getElementById("imageCounter");
+
+const request = async () => {
+	let resp = await fetch('https://chaoscraft.ml/files/gallery/imgs.json');
+	if (!resp.ok) {
+		resp = await fetch('./imgs.json');
+		if (!resp.ok) {
+			spanImageCounter.textContent = "Загрузка провалилась :("
+		}
+	}
+	let json = await resp.json();
+	return json;
+}
+
+const galleryScript = async () => {
+	var divMainContainer = document.getElementById("mainContainer");
+	var divModalWindowContainer = document.getElementById("modalWindowContainer");
+	var divModalWindow = document.getElementById("modalWindow");
+	var divImageHat = document.getElementById("imageHat");
+	var divImageDescription = document.getElementById("imageDescription");
+
+	var clientWidthBoundaryForImages = 40*parseFloat(getComputedStyle(document.body).fontSize);
+
+	function checkAdaptivityForImages() {
+		var clientWidth = document.body.clientWidth;
+
+		return (clientWidth > clientWidthBoundaryForImages) ? "desktop" : "mobile";
+	}
+
+	function openImage() {
+		if (!location.hash) location.hash = "openimage-" + this.id;
+
+		divModalWindowContainer.style.display = "block";
+
+		divModalWindow.style.display = "block";
+
+		divModalWindow.style.backgroundImage = "url('https://i.imgur.com/" + this.id + ".png')";
+
+		if (this._interpolationMode == "pixelated") {
+			divModalWindow.className = "pixelatedImageMode";
+		} else {
+			divModalWindow.className = "regularImageMode";
+		}
+
+		divImageHat.style.display = "block";
+		divImageDescription.style.display = "inline-block";
+		divImageDescription.innerHTML = "<a title=\"Открыть оригинал в новой вкладке\" target='_blank' href='" + "https://i.imgur.com/" + this.id + ".png" + "'>" + this.title + "</a>";
+
+		var imgExitButton = document.getElementById("exitButton");
+		imgExitButton.style.display = "block";
+
+		imgExitButton.onclick = function closeImage() {
+			divModalWindowContainer.style.display = "none";
+			history.pushState(null, null, window.location.href.split('#')[0]);
+		}
+	}
+
+	divModalWindowContainer.onclick = function clickOnModalWindowContainer(event) {
+		if (event.target == this || event.target.parentNode == this) {
+			divModalWindowContainer.style.display = "none";
+			history.pushState(null, null, window.location.href.split('#')[0]);
+		}
+	}
+
+	
+	var spanImageCounterNumber = 0;
+	var imagesPerPage = 36;
+	var imageNumberForPage = 0;
+	var pageCount = 0;
+
+	// Gallery json start 
+
+	const imageList = await request();
+
+	// Gallery json end 
+
+	for (var key in imageList) {
+		var previewLink = "https://i.imgur.com/" + key + "b.jpg";
+
+		var divImageContainer = document.createElement("div");
+
+		divImageContainer.id = key;
+		divImageContainer.className = "imageContainer";
+		divImageContainer._bg = "url(" + previewLink + ")";
+		divImageContainer.title = imageList[key].title;
+		divImageContainer.tags = imageList[key].tags;
+
+		divImageContainer.onclick = openImage;
+
+		if (imageList[key].big == false) {
+			divImageContainer._interpolationMode = "pixelated";
+		} else {
+			divImageContainer._interpolationMode = "regular";
+		}
+
+		spanImageCounterNumber += 1;
+
+		imageNumberForPage = spanImageCounterNumber % imagesPerPage;
+
+		if (imageNumberForPage == 1) {
+			pageCount++;
+		}
+
+		divImageContainer.style.display = (pageCount == 1) ? "" : "none";
+
+		divImageContainer._pageRelated = pageCount;
+		divMainContainer.appendChild(divImageContainer);
+	}
+
+	var pumpkin = document.getElementById("cgn6ZK0");
+
+	pumpkin._bg = "url(https://i.imgur.com/4GfXIK6b.jpg)";
+
+	var divImageContainers = document.getElementsByClassName("imageContainer");
+
+	function showPreview(divImageContainer) {
+		if (!divImageContainer.style.backgroundImage) {
+			divImageContainer.style.backgroundImage = divImageContainer._bg;
+		}
+	}
+
+	for (var i = 0; i < divImageContainers.length; i++) {
+		if (divImageContainers[i]._pageRelated == 1) {
+			showPreview(divImageContainers[i]);
+		}
+	}
+
+	var pageChooseTop = document.getElementById("pageChooseTop");
+	var pageChooseBottom = document.getElementById("pageChooseBottom");
+
+	function openPage(event) {
+		if (!event.target.classList.contains("pageButton")) {
+			return;
+		}
+
+		var currentPage = +event.target.textContent;
+		var currentPageButton = currentPage - 1;
+
+		for (var i = 0; i < pageChooseTop.childNodes.length; i++) {
+			pageChooseTop.childNodes[i].classList.remove("pageButtonChosen");
+			pageChooseBottom.childNodes[i].classList.remove("pageButtonChosen");
+		}
+		pageChooseTop.childNodes[currentPageButton].classList.add("pageButtonChosen");
+		pageChooseBottom.childNodes[currentPageButton].classList.add("pageButtonChosen");
+
+		for (var j = 0; j < spanImageCounterNumber; j++) {
+			if (divImageContainers[j]._pageRelated == currentPage) {
+				showPreview(divImageContainers[j]);
+				divImageContainers[j].style.display = "";
+			} else {
+				divImageContainers[j].style.display = "none";
+			}
+		}
+
+		if (event.target.parentNode.id == "pageChooseBottom") {
+			pageChooseTop.scrollIntoView(true);
+		}
+	}
+
+	pageChooseTop.onclick = pageChooseBottom.onclick = openPage;
+
+	function setPageButtons() {
+		if (pageCount > 1) {
+			for (var i = 1; i <= pageCount; i++) {
+				var pageButton = document.createElement("div");
+				pageButton.textContent = i;
+				if (i == 1) {
+					pageButton.className = "pageButton pageButtonChosen";
+				} else {
+					pageButton.className = "pageButton";
+				}
+				pageChooseTop.appendChild(pageButton);
+
+				var pageButtonCopy = pageButton.cloneNode(true);
+				pageChooseBottom.appendChild(pageButtonCopy);
+			}
+		}
+	}
+
+	setPageButtons();
+
+	let imgCounterPreText = "На данный момент галерея насчитывает " + spanImageCounterNumber + " "
+
+	if ( (spanImageCounterNumber % 10 >= 5 && spanImageCounterNumber % 10 <= 9) || (spanImageCounterNumber % 10 == 0) || ((spanImageCounterNumber % 100) >= 10 && (spanImageCounterNumber % 100) <= 19) ) {
+		spanImageCounter.textContent = imgCounterPreText + "изображений.";
+	} else if (spanImageCounterNumber % 10 >= 2 && spanImageCounterNumber % 10 <= 4) {
+		spanImageCounter.textContent = imgCounterPreText + "изображения.";
+	} else if (spanImageCounterNumber % 10 == 1) {
+		spanImageCounter.textContent = imgCounterPreText + "изображение.";
+	}
+
+	function setAdaptiveSizeForImage() {
+		if (checkAdaptivityForImages() == "mobile") {
+			for (var i=0; i<divImageContainers.length; i++) {
+				divImageContainers[i].style.width = "38vw";
+				divImageContainers[i].style.height = "38vw";
+			}
+		} else {
+			for (var i=0; i<divImageContainers.length; i++) {
+				divImageContainers[i].style.width = "19vw";
+				divImageContainers[i].style.height = "19vw";
+			}
+		}
+	}
+
+	setAdaptiveSizeForImage();
+	window.addEventListener("resize", setAdaptiveSizeForImage);
+
+	var tagButtons = document.getElementById("tagChoose");
+
+	var filterSpoiler = document.getElementById("filterSpoiler");
+	var tagChoose = document.getElementById("tagChoose");
+	filterSpoiler.onclick = function () {
+		if (tagChoose.style.display == "none") {
+			tagChoose.style.display = "block";
+		} else {
+		//	for (var i = 0; i < tagButtons.childNodes.length; i++) {
+		//		tagButtons.childNodes[i].className = "tagButton tagButtonIgnored";
+		//	}
+		//	filterImages();
+			tagChoose.style.display = "none";
+		}
+	}
+
+	var tagList = {
+		"type": ["art", "photoshop", "screenshot", "map", "gif"],
+		"where": ["web", "minecraft", "rncr", "randomcraft", "castit", "chaoscraft", "likobsk", "zombiesland", "nether"],
+		"gamemode": ["hub", "whitelist", "survival", "creative", "skyblock", "skywars", "castlewars", "parkour", "build"],
+		"user": ["getup", "playerchar", "rult", "haivon", "dragon", "kamka", "imody", "laimon", "namiya", "munogun", "delwex", "subsub", "cubbins", "columb", "paper", "vasya", "nekobot"],
+		"object": ["creeper", "cake", "sign", "villager", "irondoor", "launcher"],
+		"misc": ["dank", "bug"]
+	};
+
+	for (category in tagList) {
+		for (var j = 0; j < tagList[category].length; j++) {
+			var divTagButton = document.createElement("div");
+			divTagButton.textContent = tagList[category][j];
+			divTagButton.className = "tagButton tagButtonIgnored";
+			divTagButton.onclick = function changeTagStatus() {
+				if (this.className == "tagButton tagButtonIgnored") {
+					this.className = "tagButton tagButtonOn";
+				} else {
+					this.className = "tagButton tagButtonIgnored";
+				}
+				filterImages();
+			}
+			divTagButton.ondblclick = function changeTagStatus() {
+				this.className = "tagButton tagButtonOff";
+				filterImages();
+			}
+			tagButtons.appendChild(divTagButton);
+
+		}
+		tagButtons.appendChild(document.createElement("br"));
+	}
+
+	var filterTextResult = document.getElementById("filterTextResult");
+
+	function filterImages() {
+		for (var i = 0; i < spanImageCounterNumber; i++) {
+			document.getElementsByClassName("imageContainer")[i].style.display = "";
+		}
+
+		pageChooseTop.innerHTML = pageChooseBottom.innerHTML = "";
+		pageCount = 0;
+
+		var imgDisabled = 0;
+		var isAnyTagChosen = false;
+
+		for (var i = 0; i < document.getElementsByClassName("tagButton").length; i++) {
+			var currentTag = document.getElementsByClassName("tagButton")[i];
+
+			if (currentTag.className != "tagButton tagButtonIgnored") {
+				isAnyTagChosen = true;
+
+				for (var j = 0; j < document.getElementsByClassName("imageContainer").length; j++) {
+					var divImageContainer = document.getElementsByClassName("imageContainer")[j];
+					if (divImageContainer.style.display == "none") {
+						continue;
+					}
+
+					var isImgFit = false;
+					if (currentTag.className == "tagButton tagButtonOn") {
+						for (var k = 0; k < divImageContainer.tags.length; k++) {
+							if (divImageContainer.tags[k] == currentTag.textContent && isImgFit != true) {
+								isImgFit = true;
+							}
+						}
+					} else {
+						isImgFit = true;
+					}
+
+					for (var k = 0; k < divImageContainer.tags.length; k++) {
+						if (divImageContainer.tags[k] == currentTag.textContent && currentTag.className == "tagButton tagButtonOff") {
+							isImgFit = false;
+						}
+					}
+
+					if (isImgFit == false) {
+						divImageContainer.style.display = "none";
+						divImageContainer._pageRelated = -1;
+
+						imgDisabled++;
+					}
+				}
+			}
+		}
+
+		var imgSuitableNumber = 0;
+
+		for (var i = 1; i <= spanImageCounterNumber; i++) {
+			var divImageContainer = divImageContainers[i-1];
+
+			imgSuitableNumber++;
+
+			if (divImageContainer.style.display == "none") {
+				imgSuitableNumber--;
+				continue;
+			}
+
+			imageNumberForPage = imgSuitableNumber % imagesPerPage;
+
+			if (imageNumberForPage == 1) {
+				pageCount++;
+			}
+
+			if (pageCount == 1) {
+				showPreview(divImageContainers[i-1]);
+				divImageContainer.style.display = "";
+			} else {
+				divImageContainer.style.display = "none";
+			}
+
+			divImageContainer._pageRelated = pageCount;
+		}
+
+		setPageButtons();
+
+		var imgError = document.getElementById("imgError");
+
+		imgError.style.display = (imgSuitableNumber == 0) ? "inline-block" : "none";
+
+		filterTextResult.textContent = (isAnyTagChosen && imgSuitableNumber != 0) ? "Найдено изображений: " + imgSuitableNumber : "";
+		filterTextResult.style.display = (isAnyTagChosen && imgSuitableNumber != 0) ? "inline-block" : "none";
+	}
+
+	if (location.hash) {
+		var hashRaw = location.hash.slice(1);
+		var hashReady;
+		if (hashRaw.substr(0, 10) == "openimage-") {
+			hashReady = hashRaw.substr(10);
+		} else {
+			hashReady = hashRaw;
+		}
+		location.hash = hashReady;
+		document.getElementById(hashReady).onclick();
+	}
+}
+galleryScript()
+
+</script>
+
+<script src="/resources/contentadjuster.js"></script>
+
+</body>
+</html>

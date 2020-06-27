@@ -1,0 +1,148 @@
+<!doctype html>
+<html ondrop="dropImg(event)" ondragover="dragImg(event)">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Canvas test</title>
+
+	<style>
+		canvas {
+			border: 1px solid black;
+			background: url(http://i.imgur.com/AOSQtzy.png) repeat;
+
+			image-rendering: optimizeSpeed;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: pixelated;
+			image-rendering: optimize-contrast;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+</head>
+<body>
+	<div>Нажмите на любую цветную область.</div>
+	<canvas id="tutorial" onclick="countAreas(Math.round(event.clientX - tutorial.getBoundingClientRect().left) - 1, Math.round(event.clientY - tutorial.getBoundingClientRect().top) - 1)">В вашем браузере не поддерживается элемент canvas.</canvas>
+</body>
+</html>
+
+<script>
+	var tutorial = document.getElementById("tutorial"),
+	context = tutorial.getContext("2d");
+	var img = new Image();
+	img.crossOrigin = "anonymous";
+	img.src = "https://i.imgur.com/bJaZljq.png";
+
+	var w, h, imageData, dat, colorR, colorG, colorB, foundPix, areas;
+
+	img.onload = function() {
+		w = img.width;
+		h = img.height;
+		tutorial.width = w;
+		tutorial.height = h;
+		context.drawImage(img, 0, 0);
+	}
+
+	function checkPix(x, y) {
+		if (x < 0 || y < 0 || x >= w || y >= h) {
+			return;
+		}
+
+		var pos = (x + y * w) * 4;
+		var dotR = dat[pos];
+		var dotG = dat[pos + 1];
+		var dotB = dat[pos + 2];
+		var dotA = dat[pos + 3];
+
+		if (dotR != colorR || dotG != colorG || dotB != colorB || dotA == 0) {
+			return;
+		}
+
+		dat[pos + 3] = 0;
+
+		foundPix.push(x, y);
+	}
+
+	function countAreas(cX, cY) {
+	//	alert(tutorial.getBoundingClientRect().left + ", " + tutorial.getBoundingClientRect().top);
+	//	return;
+
+		context.drawImage(img, 0, 0);
+
+		if (cX < 0 || cY < 0 || cX >= w || cY >= h) {
+			alert("Это граница канваса.");
+			return;
+		}
+
+		var cPos = (cX + cY * w) * 4;
+
+		imageData = context.getImageData(0, 0, w, h);
+		dat = imageData.data;
+
+		colorR = dat[cPos];
+		colorG = dat[cPos + 1];
+		colorB = dat[cPos + 2];
+
+		foundPix = [];
+		areas = 0;
+
+		for (var i = 0; i < dat.length; i += 4) {
+			var dotR = dat[i];
+			var dotG = dat[i + 1];
+			var dotB = dat[i + 2];
+			var dotA = dat[i + 3];
+
+			if (dotR == colorR && dotG == colorG && dotB == colorB && dotA != 0) {
+				areas++;
+
+				var num = i / 4;
+				var x = num % w;
+				var y = (num - x) / w;
+
+				foundPix.push(x, y);
+
+				dat[i + 3] = 0;
+
+				while (foundPix.length) {
+					var y = foundPix.pop();
+					var x = foundPix.pop();
+
+					checkPix(x+1, y);
+					checkPix(x-1, y);
+					checkPix(x, y+1);
+					checkPix(x, y-1);
+				}
+			}
+		}
+
+		context.putImageData(imageData, 0, 0);
+
+		alert("Всего областей данного цвета: " + areas);
+	}
+
+
+
+	var userFile = new FileReader;
+
+	function dragImg(e) {
+		e.stopPropagation();
+		e.preventDefault();
+	}
+
+	function dropImg(e) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		userFile.readAsDataURL(e.dataTransfer.files[0]);
+	}
+
+	userFile.onerror = function() {
+		console.log("Ошибка при загрузке файла!");
+	}
+
+	userFile.onload = function() {
+		img.src = userFile.result;
+	}
+
+</script>

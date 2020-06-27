@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "**/*.ss.js", "use": "@now/node" },
+    { "src": "**/*.php", "use": "@now/php" },
+    { "src": "**", "use": "@now/static" }
+  ]
+}

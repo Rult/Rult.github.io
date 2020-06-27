@@ -1,0 +1,47 @@
+html {
+	background-image: linear-gradient(white, gray);
+	color: #000000;
+}
+#hat a, #hatMobile a {
+	color: #000000;
+}
+.notActiveSite, a:not([href]) {
+	color: rgb(85, 85, 85);
+}
+a {
+	color: #185078;
+}
+
+#hat, #hatMobile, #sidebar, #sidebarMobile, 
+#sidebar #sidebarSign, #sidebar #sidebarMenu, #sidebar #footer,
+#sidebarMobile #sidebarMenu,
+#content {
+	background-color: #fff;
+	background: #fff;
+	border: 1px solid black;
+}
+
+#sidebar, #sidebarMobile {
+	background-image: linear-gradient(to top left, white, #bbb);
+}
+
+#sidebar #footer {
+	background-image: linear-gradient(to left, white, #bbb);
+}
+
+#sidebarMobile {
+	background-color: #fff;
+	background: #fff;
+}
+
+#sidebarMobile #sidebarMenu {
+	border: 0;
+}
+
+
+
+
+.regularImage {
+	filter: saturate(0.5) brightness(200%) contrast(200%) hue-rotate(180deg);
+	-webkit-filter: saturate(0.5) brightness(200%) contrast(200%) hue-rotate(180deg);
+}

@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Азриел-трэйл!</title>
+	<link rel="icon" href="/resources/favicon.ico" type="image/x-icon">
+
+	<style>
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			color: #fff;
+			background: #111;
+			text-align: center;
+		}
+		canvas {
+			margin-top: 2em;
+			background: url(http://i.imgur.com/AOSQtzy.png) repeat;
+			background: #111;
+
+			image-rendering: optimizeSpeed;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: pixelated;
+			image-rendering: optimize-contrast;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+
+        input {
+            background-color: #000;
+            color: #D8D6CD;
+            border: 1px solid #222;
+        }
+
+        input[type=submit] {
+            background-color: #1E1E1E;
+            border-radius: 4px;
+            padding: 0.3em;
+            opacity: 0.85;
+        }
+
+        input[type=submit]:hover {
+            opacity: 1;
+        }
+	</style>
+</head>
+<body>
+	<h1>Азриел-трэйл!</h1>
+	<form id="sendParamsForm">
+	<p>Ссылка на картинку:<br>
+	<input id="inputImageSource" value="https://i.imgur.com/eLfAYmH.png"></input></p>
+	<p>Контраст:<br>
+	<input id="inputContrast" value="400"></input></p>
+	<p>Количество следов:<br>
+	<input id="inputTrailCount" value="20"></input></p>
+	<p>Различие цветов в хвосте:<br>
+	<input id="inputColorDiff" value="32"></input></p>
+	<p>Скорость:<br>
+	<input id="inputSpeed" value="18"></input></p>
+	<p>Расстояние между следами:<br>
+	<input id="inputStepDistance" value="12"></input></p>
+	<input type="submit" value="Использовать параметры"></input>
+	</form>
+	<canvas id="tutorial">В вашем браузере не поддерживается элемент canvas.</canvas>
+</body>
+</html>
+
+<script>
+var tutorial = document.getElementById("tutorial"),
+context = tutorial.getContext("2d");
+
+var imageData;
+var dat;
+
+var imgw;
+var imgh;
+var startX;
+var startY;
+
+var blackImageData;
+var bDat;
+var colorImageData;
+var cDat;
+
+var intervalTimer;
+
+function startAnimation() {
+	clearTimeout(intervalTimer);
+	var tw = tutorial.width = document.documentElement.clientWidth * 0.95;
+	var th = tutorial.height = document.documentElement.clientHeight;
+	context.clearRect(0, 0, tw, th);
+
+	var imageSource = document.getElementById("inputImageSource").value;
+	var contrast = +document.getElementById("inputContrast").value;
+	var trailCount = +document.getElementById("inputTrailCount").value;
+	var colorDiff = +document.getElementById("inputColorDiff").value;
+	var speed = +document.getElementById("inputSpeed").value;
+	var stepDistance = +document.getElementById("inputStepDistance").value;
+
+	var curveT = 0;
+
+	var red = 255;
+	var green = 63;
+	var blue = 63;
+
+	var blackImageObject;
+	var trails = [];
+
+	var lastPositionsX = [];
+	var lastPositionsY = [];
+
+	var curX = 0;
+	var curY = 0;
+
+	var tempCanvas = document.createElement("canvas");
+	var tempContext;
+
+	var img = new Image();
+	img.crossOrigin = "anonymous";
+	img.src = imageSource;
+
+	img.onload = function() {
+		imgw = Math.min(Math.round(th/2), Math.round(tw/5));
+		imgh = Math.round(img.height/img.width)*imgw;
+
+		startX = tw/2 - imgw/2;
+		startY = (th - imgh)/2;
+
+		tempCanvas.width = imgw;
+		tempCanvas.height = imgh;
+		tempContext = tempCanvas.getContext("2d");
+
+		tempContext.drawImage(img, 0, 0, imgw, imgh);
+
+		imageData = tempContext.getImageData(0, 0, imgw, imgh);
+		dat = imageData.data;
+
+		for (var i = 0; i < dat.length; i += 4) {
+			var dotR = dat[i];
+			var dotG = dat[i + 1];
+			var dotB = dat[i + 2];
+			var dotA = dat[i + 3];
+
+			if (dotA == 0) {
+				continue;
+			}
+
+			dat[i] = dat[i + 1] = dat[i + 2] = (dotR + dotG + dotB > contrast) ? 255 : 0;
+
+		}
+
+		tempContext.putImageData(imageData, 0, 0);
+
+		blackImageData = tempContext.getImageData(0, 0, imgw, imgh);
+		bDat = blackImageData.data;
+
+		blackImageObject = new Image();
+		blackImageObject.src = tempCanvas.toDataURL("image/png", 1.0);
+
+		for (var i = 0; i < trailCount; i++) {
+			tempContext.putImageData(blackImageData, 0, 0);
+
+			colorImageData = tempContext.getImageData(0, 0, imgw, imgh);
+			cDat = colorImageData.data;
+
+			for (var j = 0; j < cDat.length; j += 4) {
+				var cR = cDat[j];
+				var cG = cDat[j+1];
+				var cB = cDat[j+2];
+				var cA = cDat[j+3];
+
+				if ( cR == cG && cR == cB && cR == 0 && cA != 0 ) {
+					cDat[j] = red;
+					cDat[j+1] = green;
+					cDat[j+2] = blue;
+					cDat[j+3] = Math.round( 255*( (trailCount - i)/trailCount ) );
+				} else {
+					cDat[j+3] = 0;
+				}
+			}
+
+			lastPositionsX.push(0);
+			lastPositionsY.push(0);
+
+			tempContext.putImageData(colorImageData, 0, 0);
+
+			trails[i] = new Image();
+			trails[i].src = tempCanvas.toDataURL("image/png", 1.0);
+
+			if (red >= 255 && green < 255 && blue <= 63) {
+				green += colorDiff;
+			} else if (red > 63 && green >= 255 && blue <= 63) {
+				red -= colorDiff;
+			} else if (red <= 63 && green >= 255 && blue < 255) {
+				blue += colorDiff;
+			} else if (red <= 63 && green > 63 && blue >= 255) {
+				green -= colorDiff;
+			} else if (red < 255 && green <= 63 && blue >= 255) {
+				red += colorDiff;
+			} else if (red >= 255 && green <= 63 && blue > 63) {
+				blue -= colorDiff;
+			}
+		}
+
+		context.fillStyle = "#111";
+		context.fillRect(0, 0, tw, th);
+		context.drawImage(blackImageObject, startX - curX, startY + curY);
+	}
+
+	function imgMove() {
+		context.fillStyle = "#111";
+		context.fillRect(0, 0, tw, th);
+
+		for (var i = trailCount - 1; i > 0; i--) {
+			lastPositionsX[i] = lastPositionsX[i - 1];
+			lastPositionsY[i] = lastPositionsY[i - 1];
+		}
+
+		lastPositionsX[0] = curX;
+		lastPositionsY[0] = curY;
+
+		for (var i = trailCount - 1; i >= 0; i--) {
+			context.drawImage(trails[i], startX - lastPositionsX[i], startY + lastPositionsY[i]);
+		}
+
+		curveT += (Math.PI / 1024) * stepDistance;
+
+		curX = Math.round((0.5 * tw) * 0.7 * Math.sin(curveT));
+
+		curY = Math.round((0.5 * th) * 0.4 * Math.sin(2 * curveT));
+
+		context.drawImage(blackImageObject, startX - curX, startY + curY);
+	}
+
+	intervalTimer = setInterval(imgMove, 1000/(speed*(12/stepDistance)));
+}
+
+startAnimation();
+window.addEventListener("resize", startAnimation);
+
+var sendParamsForm = document.getElementById("sendParamsForm");
+sendParamsForm.onsubmit = function sendParams(event) {
+	event.preventDefault();
+	startAnimation();
+}
+
+</script>

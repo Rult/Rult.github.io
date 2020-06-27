@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Веб-архив</title>
+	<link rel="stylesheet" href="/resources/styleadaptive.css">
+	<link rel="icon" href="/resources/favicon.ico" type="image/x-icon">
+	
+	<style>
+		h2 {
+			position: relative;
+			margin-top: 15vh;
+		}
+		
+		input {
+			width: 30em;
+			max-width: 90vw;
+		}
+		
+		button {
+			position: relative;
+			display: block;
+			margin-top: 1em;
+		}
+		
+		* {
+			margin: auto;
+			text-align: center;
+		}
+	</style>
+	
+</head>
+<body>
+
+	<h2>Введите в форму адрес сайта, чтобы сохранить его.</h2>
+	<input id="siteArea" type="text" onchange="getSaveLink()"></input>
+	<a id="saveButton" target="_blank"><button>Клик!</button></a>
+
+</body>
+</html>
+
+<script>
+var siteArea = document.getElementById("siteArea");
+var saveButton = document.getElementById("saveButton");
+
+function getSaveLink() {
+	saveButton.href = "http://web.archive.org/save/" + siteArea.value;
+}
+</script>

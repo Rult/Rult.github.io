@@ -1,0 +1,404 @@
+﻿html {
+	font-family: Arial, sans-serif;
+
+	background-color: #0d0f15;
+	background-image: url(/resources/dark_blue_bg.png);
+	background-repeat: repeat-y;
+	background-attachment: fixed;
+	background-size: 100vw;
+    
+    	color: #ece9df;
+}
+
+body {
+	margin: 0;
+}
+
+
+
+#hat, #hatMobile {
+	display: inline-flex; /* шапка/хеадер растягивается по ее содержимому */
+	flex-wrap: wrap; /* содержимое переносится, если не хватает места */
+	
+	transition: margin-left 0s ease-in-out, width 0s ease-in-out;
+	
+	position: relative;
+	
+	top: 0;
+	padding: 0.3em;
+	
+	background-color: #282d38;
+	/* background: linear-gradient(to top left, #c0c0c0, #aaa); */
+	
+	border-bottom-left-radius: 1em;
+	border-bottom-right-radius: 1em;
+}
+
+	#hat a, #hatMobile a {
+		color: #ece9df;
+	}
+
+	#menuButton {
+		/* transition: opacity 0.2s ease-in-out; */
+		
+		cursor: pointer; 
+		
+		float: left;
+		
+		padding: 0.2em;
+		padding-right: 0.55em;
+		
+		width: 2.3em;
+		height: 2.3em;
+		
+		opacity: 0.7;
+	}
+	
+	#menuButton:hover {
+		opacity: 1;
+	}
+
+		#hatMenuTitle {
+			position: relative;
+			
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 2em;
+			
+			top: 0.1em;
+			
+			padding-right: 0.5em;
+			
+			float: left;
+		}
+		
+		#hatMenuSections {
+			position: relative;
+
+			font-size: 1.3em;
+			
+			word-spacing: 0.9em;
+			
+			font-family: Arial, sans-serif;
+			
+			margin-left: 0.7em;
+			margin-right: 0.5em;
+			margin-top: 0.45em; 
+		}
+		
+			#hatMenuSections a {
+				word-spacing: 0.2em;
+			}
+			
+		.hatMenuSection {
+			position: relative;
+
+			display: inline-flex;
+			flex-wrap: wrap;
+			
+			margin-right: 1.3em;
+		}
+		
+#hatMobile {
+	width: 93.5vw;
+	margin-left: 2vw;
+}
+
+
+
+#sidebar {
+	transition: margin-left 0s ease-in-out;
+	
+	position: fixed;
+
+	/* margin-left: -16vw; - не нужно */
+	top: 0;
+	margin-bottom: 0;
+
+	width: 15vw; /* на сайдбар вертикальная полоса прокрутки не влияет */
+	height: 100%; /* горизонтальная полоса практически не появляется, но влияет на сайдбар */
+
+	background-color: #2e333f;
+	/* background-color: rgba(159, 159, 159, 0.95); */
+}
+
+	#sidebar #sidebarSign {
+		font-size: calc(4.685vw*0.5);
+		
+		position: relative;
+		
+		margin-top: calc(2.5vw*0.15);
+		margin-left: calc(2.5vw*0.15);
+		
+		padding-top: calc(4.685vw*0.2);
+		padding-left: 1.5vw;
+		padding-right: calc(2*1.5vw*0.15);
+
+		width: calc(100% - 1.5vw - 2*1.5vw*0.15);
+		height: calc(4.685vw - 4.685vw*0.2);
+
+		background-color: #292e39;
+		
+		border-radius: 1vw;
+	}
+
+		/*
+		#sidebarLogoTitle {
+			top: calc(4.685vw*0.2);
+			margin-left: 1.5vw;
+			margin-right: calc(2*1.5vw*0.15);
+
+			height: calc(4.685vw*0.5);
+		}
+		*/
+
+	#sidebar #sidebarMenu {
+		line-height: 2.3vw;
+		
+		font-size: 1.65vw;
+
+		margin-top: 0.8vw;
+
+		width: calc(100% - 2*0.8vw);
+		height: calc(100vh - 10vw - 2*0.8vw);
+
+		padding: 0.8vw;
+		padding-top: 1.2vw;
+		overflow-y: auto; /* в меню появляется полоса прокрутки, если места не хватает */
+
+		background-color: #282c37;
+		/* background-color: rgba(204, 204, 204, 0.5); */
+	}
+	
+		#sidebar .sidebarMenuSection {
+			font-size: 1.1em;
+
+			margin-left: 0.2em;
+			margin-bottom: 0.15em;
+		}
+
+		#sidebar .sidebarMenuLinks {
+			font-size: 0.9em;
+			
+			margin-left: 0.5em;
+			margin-bottom: 0.3em;
+		}
+
+	#sidebar #footer {
+		font-size: 1.1vw;
+
+		position: absolute;
+		bottom: calc(1.5vw*0.15);
+
+		width: calc(100% - 2*0.4vw - 0.4vw);
+
+		padding: 0.4vw;
+		padding-left: 0.8vw;
+
+		background-color: #2e333f;
+		/* color: #000; */
+	}
+
+#sidebarMobile {
+	text-align: center;
+	
+	position: relative;
+
+	/* margin-left: -16vw; - не нужно */
+	top: 1.5vw;
+	margin-bottom: 2.5vw;
+	
+	margin-left: 6.5vw;
+
+	width: calc(86vw - 1em);
+	
+	padding: 0.5em;
+	
+	background-color: #282c37;
+	/* background-color: rgba(179, 179, 179, 0.95); */
+}
+
+	#sidebarMobile #sidebarSign {
+		display: none;
+		
+		/* font-size: 2.5em;
+		padding-top: 0.4em; */
+		
+	}
+	
+	#sidebarMobile #sidebarMenu {
+		font-size: 1.65em;
+		padding-bottom: 0.3em;
+	}
+	
+		#sidebarMobile .sidebarMenuSection {
+			font-size: 1.1em;
+			margin-top: 0.25em;
+			margin-bottom: 0.15em;
+		}
+
+		#sidebarMobile .sidebarMenuLinks {
+			display: none;
+
+			line-height: 1.5em;
+		}
+	
+	
+
+	#sidebarMobile #footer {
+		display: none;
+	}
+	
+
+
+	
+#content {
+	transition: margin-left 0s ease-in-out, width 0s ease-in-out;
+	
+	position: relative;
+
+	top: 1.5vw;
+	margin-bottom: 2.5vw;
+	min-height: calc(100vh - 4vw - 1.5vw - 2.5vw - 3.3em); 
+	/* (2vw + 2vw) - padding, 1.5vw - top, 2.5vw - margin-bottom; 3.3em - минимальная высота шапки, исходя из высоты кнопки */
+
+	padding: 2vw 3vw;
+
+	background-color: #282c37;
+	/* background-color: rgba(179, 179, 179, 0.95); */
+}
+
+body.desktop.withSidebar #content {
+	margin-left: 18vw;
+
+	width: 72vw;
+}
+
+body.desktop.noSidebar #content, body.mobile #content {
+	margin-left: 6.5vw;
+
+	width: 80vw;
+}
+
+h1, h2, h3 {
+	margin: 0;
+	
+	font-weight: normal;
+	font-size: 2em;
+
+	margin-bottom: 0.25em;
+}
+
+h1 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+h1 + p {
+	margin-bottom: 1em;
+}
+
+p {	
+	margin: 0;
+	margin-bottom: 0.5em;
+}
+
+.regularImage, #contentLogo {
+	float: right;
+
+	margin-left: 3vw;
+	margin-bottom: 2vw;
+
+	/* min-width: 10vw;
+	max-width: 25vw; */
+
+	clear: both; /* чтобы картинки не выходили за следующий заголовок */
+}
+
+.contentMainEnd {
+	clear: both; /* чтобы картинки не выходили за пределы контент-блока */
+}
+
+.notActiveSite, a:not([href]) {
+	color: #d2c7b5;
+}
+
+
+
+
+
+
+
+a {
+	color: #94c6ea;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	text-shadow: rgba(151,201,237,0.5) 0.05em 0.05em 0.3em;
+}
+
+a, a:hover {
+	transition: text-shadow 0.1s ease-in-out;
+}
+
+#hat a:hover, #hatMobile a:hover {
+	text-shadow: rgba(200,200,200,0.8) 0.05em 0.05em 0.3em;
+}
+
+.pixelatedImage {
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: pixelated;
+	image-rendering: optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+
+#modalWindowContainer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,0.7);
+	z-index: 99999;
+	display: none;
+	transition: opacity 0.5s ease-in-out;
+}
+
+::-webkit-scrollbar {
+	width: 1.5vw;
+	max-width: 0.85em; /* полоса прокрутки растягивается, но есть максимум */
+}
+::-webkit-scrollbar-thumb {
+	background: #424A56;
+}
+::-webkit-scrollbar-track-piece {
+	background: #292A33;
+}
+
+::selection {
+	background: #1E72CC;
+}
+
+input, button {
+	background-color: #000;
+    color: #D8D6CD;
+    border: 1px solid #222;
+}
+
+input[type=submit], button {
+    background-color: #1E1E1E;
+    border-radius: 4px;
+    padding: 0.3em;
+    opacity: 0.85;
+}
+
+input[type=submit]:hover, button:hover {
+    opacity: 1;
+}
