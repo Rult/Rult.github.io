@@ -10,8 +10,8 @@ var objectSidebarMenuSections = { // список ссылок для сайдб
 	"Соседи": "",
 		"Соседи - ссылки": {
 			"ChaosCraft": "https://chaoscraft.ml/",
-			"CastIT": "http://castit.tk/",
-			"oneLab": "https://vk.com/onelab"
+			"Deer's House": "https://pious.dev/",
+			"oneLab": "https://github.com/oneLab-Projects"
 		}
 };
 
